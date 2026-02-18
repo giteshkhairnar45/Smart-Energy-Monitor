@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Energy Bill Predictor</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <span class="logo-icon"></span>
+                <span class="logo-text">Energy Predictor</span>
+            </div>
+            <div class="nav-menu">
+                <button class="nav-btn active" data-page="home">Home</button>
+                <button class="nav-btn" data-page="predict">Predict Bill</button>
+                <button class="nav-btn" data-page="add-appliance">Add Appliance</button>
+                <button class="nav-btn" data-page="report">Usage Report</button>
+                <button class="nav-btn" data-page="analysis">Analysis</button>
+                <button class="nav-btn" data-page="mlreport">ML Report</button>
+                <button class="nav-btn" data-page="chatbot">Assistant</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Home Page -->
+        <div id="home" class="page active">
+            <div class="container">
+                <div class="hero-section">
+                    <div class="hero-content">
+                        <h1 class="hero-title">Energy Bill Predictor</h1>
+                        <p class="hero-subtitle">Advanced machine learning platform for electricity bill prediction and energy consumption optimization</p>
+                        <p style="margin-top: 1.5rem; font-size: 1rem; color: #e5e7eb;">
+                            This project combines <span style="color:#3b82f6; font-weight:600;">machine learning</span>,
+                            <span style="color:#22c55e; font-weight:600;">smart appliance tracking</span>, and
+                            <span style="color:#f97316; font-weight:600;">interactive visual reports</span> to help you
+                            understand and control your electricity usage in a simple, visual way.
+                        </p>
+                        <div style="display:flex; flex-wrap:wrap; gap:0.75rem; justify-content:center; margin-top:1.75rem;">
+                            <span style="background:linear-gradient(135deg,#3b82f6,#06b6d4); padding:0.4rem 0.9rem; border-radius:999px; font-size:0.85rem; color:#ffffff; font-weight:600;">
+                                Bill Prediction Engine
+                            </span>
+                            <span style="background:linear-gradient(135deg,#8b5cf6,#ec4899); padding:0.4rem 0.9rem; border-radius:999px; font-size:0.85rem; color:#ffffff; font-weight:600;">
+                                Appliance-wise Usage Insights
+                            </span>
+                            <span style="background:linear-gradient(135deg,#f97316,#facc15); padding:0.4rem 0.9rem; border-radius:999px; font-size:0.85rem; color:#111827; font-weight:700;">
+                                Smart Savings Suggestions
+                            </span>
+                            <span style="background:linear-gradient(135deg,#22c55e,#15803d); padding:0.4rem 0.9rem; border-radius:999px; font-size:0.85rem; color:#ecfdf5; font-weight:600;">
+                                Real-time ML Analysis
+                            </span>
+                        </div>
+                        <div style="margin-top:2rem; max-width:900px; margin-left:auto; margin-right:auto; font-size:0.95rem; color:#d1d5db; line-height:1.8;">
+                            <p>
+                                Start by <span style="color:#3b82f6; font-weight:600;">entering your last 3 bills</span> to predict your
+                                upcoming bill, then <span style="color:#22c55e; font-weight:600;">add your home appliances</span> to see
+                                which devices consume the most energy. Detailed
+                                <span style="color:#8b5cf6; font-weight:600;">usage, cost and ML-based reports</span> guide you towards
+                                practical energy-saving actions.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="feature-cards">
+                        <div class="feature-card">
+                            <div class="feature-icon-wrapper">
+                                <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M3 3v18h18"></path>
+                                    <path d="M7 16l4-4 4 4 6-6"></path>
+                                </svg>
+                            </div>
+                            <h3>Bill Prediction</h3>
+                            <p>Machine learning algorithms predict your next month's electricity bill with high accuracy</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon-wrapper">
+                                <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M12 20v-6M6 20V10M18 20V4"></path>
+                                </svg>
+                            </div>
+                            <h3>Usage Analysis</h3>
+                            <p>Comprehensive analytics and visualizations of your appliance usage patterns</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon-wrapper">
+                                <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                                </svg>
+                            </div>
+                            <h3>Energy Optimization</h3>
+                            <p>AI-powered recommendations to reduce consumption and lower your energy costs</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Predict Bill Page -->
+        <div id="predict" class="page">
+            <div class="container">
+                <h1 class="page-title">Predict Your Bill</h1>
+                <div class="form-section">
+                    <h2 class="section-title">Enter Last 3 Months' Data</h2>
+                    <div class="bill-inputs" id="bill-inputs">
+                        <!-- Dynamically generated -->
+                    </div>
+                    <button class="btn btn-primary" id="predict-btn">Calculate Prediction</button>
+                    <div id="prediction-result" class="result-box"></div>
+                    <div class="chart-container">
+                        <canvas id="units-chart"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="bills-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Appliance Page -->
+        <div id="add-appliance" class="page">
+            <div class="container">
+                <h1 class="page-title">Add an Appliance</h1>
+                <div class="form-section">
+                    <div class="form-group">
+                        <label for="appliance-select">Select Appliance:</label>
+                        <select id="appliance-select" class="form-control">
+                            <option value="">-- Select Appliance --</option>
+                            <option value="Fan">Fan</option>
+                            <option value="Air Conditioner">Air Conditioner</option>
+                            <option value="Refrigerator">Refrigerator</option>
+                            <option value="TV">TV</option>
+                            <option value="Washing Machine">Washing Machine</option>
+                            <option value="LED">LED</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="hours-input">Hours per day:</label>
+                        <input type="number" id="hours-input" class="form-control" min="0" max="24" placeholder="Enter hours (0-24)">
+                    </div>
+                    <div class="button-group">
+                        <button class="btn btn-primary" id="add-appliance-btn">Add Appliance</button>
+                        <button class="btn btn-danger" id="remove-appliance-btn">Remove Selected</button>
+                    </div>
+                    <div class="appliance-list">
+                        <h3>Your Appliances</h3>
+                        <ul id="appliance-list"></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Usage Report Page -->
+        <div id="report" class="page">
+            <div class="container">
+                <h1 class="page-title">Energy Usage Report</h1>
+                <div class="form-section">
+                    <button class="btn btn-primary" id="generate-report-btn">Generate Report</button>
+                    <div id="report-content" class="report-content"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Analysis Page -->
+        <div id="analysis" class="page">
+            <div class="container">
+                <h1 class="page-title">Usage Analysis</h1>
+                <div class="form-section">
+                    <button class="btn btn-primary" id="generate-analysis-btn">Generate Analysis</button>
+                    <div class="chart-container">
+                        <canvas id="analysis-chart"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="regression-chart"></canvas>
+                    </div>
+                    <div id="analysis-content" class="analysis-content"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ML Report Page -->
+        <div id="mlreport" class="page">
+            <div class="container">
+                <h1 class="page-title">ML Analysis Report</h1>
+                <div class="form-section">
+                    <button class="btn btn-primary" id="generate-mlreport-btn">Generate ML Analysis</button>
+                    <div class="chart-container">
+                        <canvas id="ml-consumption-chart"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="ml-pie-chart"></canvas>
+                    </div>
+                    <div id="mlreport-content" class="mlreport-content"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chatbot Page -->
+        <div id="chatbot" class="page">
+            <div class="container">
+                <h1 class="page-title">Energy Assistant</h1>
+                <div class="chat-container">
+                    <div id="chat-messages" class="chat-messages"></div>
+                    <div class="chat-input-container">
+                        <input type="text" id="chat-input" class="chat-input" placeholder="Ask me anything about energy...">
+                        <button class="btn btn-primary" id="send-chat-btn">Send</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
+
